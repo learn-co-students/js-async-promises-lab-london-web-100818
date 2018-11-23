@@ -4,56 +4,58 @@ const questions = [
   {questionText: "Goldfish only have a memory of about three seconds", answer: false}
 ]
 
+const askButton = document.querySelector("#ask-button")
+const questionContainer = document.querySelector(".question-container")
+const trueButton = document.querySelector("#true")
+const falseButton = document.querySelector("#false")
+
 let question;
-function askQuestion(){
-  return questions[0]
-}
 
-function displayQuestionOnClick(){
-  let btn = document.querySelector('a')
-  return btn.addEventListener('click', () => {
-    toggleTrueAndFalseButtons()
-    askQuestionThenRemoveQuestion(5000)
-  })
-}
 
-function trueAndFalseButtons(){
-  return btns = document.querySelector('.true-false-list').querySelectorAll('.btn')
-}
+function appendQuestion(){
+  questionContainer.innerHTML = questions[0].questionText;
 
-function toggleTrueAndFalseButtons(){
-  trueAndFalseButtons().forEach(function(btn){
-    btn.classList.toggle("hide")
-  })
-}
-
-function checkQuestion(question, answer){
-  question.questionAnswer == answer
 }
 
 function askQuestionThen(time){
-  question = questions[0]
-  appendQuestion(question)
-  return new Promise(function(resolve){
-    setTimeout(function(){
-      resolve(question)
-    }, time)
-  })
-}
-
-function appendQuestion(question){
-  let container = document.querySelector('.question-container')
-  container.innerHTML = question.questionText;
+  question = questions[0];
+  appendQuestion();
+  return new Promise((resolve) => {
+    setTimeout(()=>resolve(question),time);
+  });
 }
 
 function removeQuestion(){
+  toggleTrueAndFalseButtons();
   return new Promise(function(){
-    let container = document.querySelector('.question-container')
-    container.innerHTML = ''
-    toggleTrueAndFalseButtons()
+    
+    questionContainer.innerHTML = ''
+    
   })
 }
 
 function askQuestionThenRemoveQuestion(time){
-  return askQuestionThen(time).then(removeQuestion)
+  return askQuestionThen(time)
+          .then(removeQuestion);
+}
+
+function trueAndFalseButtons(){
+  return [trueButton, falseButton]
+}
+
+function toggleTrueAndFalseButtons(){
+  trueAndFalseButtons().forEach( (button) => {
+    if(button.classList.contains("hide")){
+      button.classList.remove("hide")
+    } else {
+      button.classList.add("hide")
+    }
+  });
+}
+
+function displayQuestionOnClick(){
+  return askButton.addEventListener('click', () => {
+    toggleTrueAndFalseButtons();
+    askQuestionThenRemoveQuestion(5000);
+  })
 }
